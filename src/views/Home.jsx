@@ -43,13 +43,13 @@ export default function Home() {
                 Your browser does not support the video tag.
             </video>
             <div className="overlay">
-                <h1 className="title">First In - Last Out</h1>
+                <h1 className="title">Team QuickFingers</h1>
                 <div className="content">
-                    <h2>Welcome to a space where you can share your stories, get feedback, and delve into the most uselessly detailed discussions 🥹 about every aspect of character development!</h2>
-                    <p>Join a community of imagineers, meet new hobbyist writer friends 😃, and cross swords on the battlefield of (*digital*) paper!</p>
+                    <h2>Awesome Fitness App</h2>
+                    <p>In Construction...</p>
                 </div>
                 <div className="user-count">
-                    <p>Number of users in the forum: {userCount}</p>
+                    <p>Number of users of the app: {userCount}</p>
                 </div>
             </div>
         </div>

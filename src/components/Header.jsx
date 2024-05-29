@@ -17,7 +17,7 @@ export default function Header() {
     return (
         <div>
             <div className="title-container">
-                <NavLink to="/" className="main-title-link">Clash of Fiction</NavLink>
+                <NavLink to="/" className="main-title-link">Undecided</NavLink>
             </div>
             <header className="header">
                 <div className="auth-links">
