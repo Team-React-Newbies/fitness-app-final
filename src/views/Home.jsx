@@ -1,41 +1,54 @@
-import React, { useEffect, useState } from "react";
-import { fetchAllUsers } from '../services/users.service'; // Adjust the path as necessary
+import React, { useEffect, useState, useRef } from "react";
+import { fetchAllUsers } from '../services/users.service';
+import { getMusicUrl } from '../services/storage.service';
 import "./Home.css";
 import backgroundImage from '../assets/Image/Anomander2.jpg';
 import backgroundVideo from '../assets/Videos/BallerinaTurns.mp4';
 
 export default function Home() {
     const [userCount, setUserCount] = useState(0);
+    const [audioUrl, setAudioUrl] = useState('');
+    const audioRef = useRef(null);
 
     useEffect(() => {
         const loadUserCount = async () => {
             try {
                 const usersData = await fetchAllUsers();
-                const usersArray = Object.values(usersData); // Convert to array
-                setUserCount(usersArray.length); // Set the user count
+                const usersArray = Object.values(usersData);
+                setUserCount(usersArray.length);
             } catch (error) {
                 console.error('Failed to fetch users:', error);
             }
         };
 
+        const fetchAudioUrl = async () => {
+            try {
+                const url = await getMusicUrl('y2mate.com - MINO x ZICO  Okey Dokey Audio.mp3');
+                setAudioUrl(url);
+            } catch (error) {
+                console.error('Error fetching audio URL:', error);
+            }
+        };
+
         loadUserCount();
+        fetchAudioUrl();
     }, []);
 
-//     return (
-//         <div className="home-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
-//             <div className="overlay">
-//                 <h1 className="title">First In - Last Out</h1>
-//                 <div className="content">
-//                     <h2>Welcome to a space where you can share your stories, get feedback, and delve into the most uselessly detailed discussions 🥹 about every aspect of character development!</h2>
-//                     <p>Join a community of imagineers, meet new hobbyist writer friends 😃, and cross swords on the battlefield of (*digital*) paper!</p>
-//                 </div>
-//                 <div className="user-count">
-//                     <p>Number of users in the forum: {userCount}</p>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
+    useEffect(() => {
+        if (audioUrl && audioRef.current) {
+            audioRef.current.play().catch(error => {
+                console.error('Error attempting to play audio:', error);
+                const playOnInteraction = () => {
+                    audioRef.current.play().catch(playError => {
+                        console.error('Error playing audio after interaction:', playError);
+                    });
+                    document.removeEventListener('click', playOnInteraction);
+                };
+                document.addEventListener('click', playOnInteraction);
+            });
+        }
+    }, [audioUrl]);
+
     return (
         <div className="home-container">
             <video className="background-video" autoPlay loop muted>
@@ -52,6 +65,12 @@ export default function Home() {
                     <p>Number of users of the app: {userCount}</p>
                 </div>
             </div>
+            {audioUrl && (
+                <audio ref={audioRef} controls autoPlay className="audio-player">
+                    <source src={audioUrl} type="audio/mp3" />
+                    Your browser does not support the audio element.
+                </audio>
+            )}
         </div>
     );
 }
