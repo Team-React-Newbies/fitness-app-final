@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchAllUsers } from '../services/users.service'; // Adjust the path as necessary
 import "./Home.css";
-import backgroundImage from '../assets/Image/Anomander2.jpg';
 import backgroundVideo from '../assets/Videos/BallerinaTurns.mp4';
 
 export default function Home() {
@@ -21,21 +20,6 @@ export default function Home() {
         loadUserCount();
     }, []);
 
-//     return (
-//         <div className="home-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
-//             <div className="overlay">
-//                 <h1 className="title">First In - Last Out</h1>
-//                 <div className="content">
-//                     <h2>Welcome to a space where you can share your stories, get feedback, and delve into the most uselessly detailed discussions 🥹 about every aspect of character development!</h2>
-//                     <p>Join a community of imagineers, meet new hobbyist writer friends 😃, and cross swords on the battlefield of (*digital*) paper!</p>
-//                 </div>
-//                 <div className="user-count">
-//                     <p>Number of users in the forum: {userCount}</p>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
     return (
         <div className="home-container">
             <video className="background-video" autoPlay loop muted>
@@ -55,3 +39,4 @@ export default function Home() {
         </div>
     );
 }
+
