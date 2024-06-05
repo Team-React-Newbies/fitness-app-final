@@ -16,7 +16,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './config/firebase-config.js';
 import Exercises from './views/Exercises.jsx';
 import Goals from './views/Goals.jsx';
-
+import Profile from './components/Profile/Profile.jsx';
+import EditProfile from './components/Profile/EditProfile.jsx';
 function App() {
   const [appState, setAppState] = useState({
     user: null,
@@ -51,6 +52,8 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/profile" element={<Authenticated><Profile /></Authenticated>} />
+              <Route path="/edit-profile" element={<Authenticated><EditProfile /></Authenticated>} />
               <Route path="/admin-dashboard" element={<Authenticated><AdminView /></Authenticated>} />
               <Route path="/posts" element={<Authenticated><AllPosts /></Authenticated>} />
               <Route path="/exercises" element={<Authenticated><Exercises /></Authenticated>} />

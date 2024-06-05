@@ -1,24 +1,52 @@
-import React, { useEffect, useState } from "react";
-import { fetchAllUsers } from '../services/users.service'; // Adjust the path as necessary
+import React, { useEffect, useState, useRef } from "react";
+import { fetchAllUsers } from '../services/users.service';
+import { getMusicUrl } from '../services/storage.service';
 import "./Home.css";
 import backgroundVideo from '../assets/Videos/BallerinaTurns.mp4';
 
 export default function Home() {
     const [userCount, setUserCount] = useState(0);
+    const [audioUrl, setAudioUrl] = useState('');
+    const audioRef = useRef(null);
 
     useEffect(() => {
         const loadUserCount = async () => {
             try {
                 const usersData = await fetchAllUsers();
-                const usersArray = Object.values(usersData); // Convert to array
-                setUserCount(usersArray.length); // Set the user count
+                const usersArray = Object.values(usersData);
+                setUserCount(usersArray.length);
             } catch (error) {
                 console.error('Failed to fetch users:', error);
             }
         };
 
+        const fetchAudioUrl = async () => {
+            try {
+                const url = await getMusicUrl('y2mate.com - MINO x ZICO  Okey Dokey Audio.mp3');
+                setAudioUrl(url);
+            } catch (error) {
+                console.error('Error fetching audio URL:', error);
+            }
+        };
+
         loadUserCount();
+        fetchAudioUrl();
     }, []);
+
+    useEffect(() => {
+        if (audioUrl && audioRef.current) {
+            audioRef.current.play().catch(error => {
+                console.error('Error attempting to play audio:', error);
+                const playOnInteraction = () => {
+                    audioRef.current.play().catch(playError => {
+                        console.error('Error playing audio after interaction:', playError);
+                    });
+                    document.removeEventListener('click', playOnInteraction);
+                };
+                document.addEventListener('click', playOnInteraction);
+            });
+        }
+    }, [audioUrl]);
 
     return (
         <div className="home-container">
@@ -36,7 +64,12 @@ export default function Home() {
                     <p>Number of users of the app: {userCount}</p>
                 </div>
             </div>
+            {audioUrl && (
+                <audio ref={audioRef} controls autoPlay className="audio-player">
+                    <source src={audioUrl} type="audio/mp3" />
+                    Your browser does not support the audio element.
+                </audio>
+            )}
         </div>
     );
 }
-
