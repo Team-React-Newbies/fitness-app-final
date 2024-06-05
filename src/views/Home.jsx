@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { fetchAllUsers } from '../services/users.service';
 import { getMusicUrl } from '../services/storage.service';
 import "./Home.css";
+import backgroundImage from '../assets/Image/Anomander2.jpg';
 import backgroundVideo from '../assets/Videos/BallerinaTurns.mp4';
 
 export default function Home() {
