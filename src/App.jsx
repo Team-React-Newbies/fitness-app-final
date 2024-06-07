@@ -18,6 +18,7 @@ import Exercises from './views/Exercises.jsx';
 import Goals from './views/Goals.jsx';
 import Profile from './components/Profile/Profile.jsx';
 import EditProfile from './components/Profile/EditProfile.jsx';
+
 function App() {
   const [appState, setAppState] = useState({
     user: null,
