@@ -95,8 +95,8 @@ export default function Header() {
 
                         {user && userData && !userData.isBlocked && (
                             <>
-                                <NavLink to="/exercises" className="nav-link">Exercises</NavLink>
-                                <NavLink to="/goals" className="nav-link">Goals</NavLink>
+                                <NavLink to="/exercises" className="nav-link">My Exercises</NavLink>
+                                <NavLink to="/goals" className="nav-link">My Goals</NavLink>
                             </>
                         )}
 
