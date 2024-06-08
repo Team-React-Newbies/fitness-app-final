@@ -60,6 +60,7 @@ import { useContext, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import { logoutUser } from "../../services/auth.service";
 import './Header.css';
+import { Avatar } from "@mui/material";
 
 export default function Header() {
     const { user, userData, setAppState } = useContext(AppContext);
@@ -72,14 +73,20 @@ export default function Header() {
 
     return (
         <div>
-            <div className="title-container">
-                <NavLink to="/" className="main-title-link">Undecided</NavLink>
-            </div>
+            
             <header className="header">
                 <div className="auth-links">
                     {user ? (
                         <>
-                            <span id="username">{`Welcome, ${userData ? userData.handle : 'Loading...'}`}</span>
+                            <NavLink to="/profile" id="username">
+                    {
+                        userData ? (
+                            <Avatar className="header-avatar" src={userData.photoUrl} sx={{ width:40, height: 40 }} />
+                        ) : (
+                             null
+                        )
+                    }
+                </NavLink>
                             <Button onClick={logout} className="button-logout">Log Out</Button>
                         </>
                     ) : (
@@ -91,6 +98,7 @@ export default function Header() {
                 </div>
                 <div className="top-nav">
                     <nav className="nav-container">
+                    <NavLink to="/" className="nav-link">Home</NavLink>
                         <NavLink to="/posts" className="nav-link">Prep</NavLink>
 
                         {user && userData && !userData.isBlocked && (
