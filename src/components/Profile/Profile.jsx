@@ -2,12 +2,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 import { getUserData } from '../../services/users.service';
 import { useNavigate } from 'react-router-dom';
-import { Container, Typography, Button, CircularProgress, Box } from '@mui/material';
+import { Container, Typography, Button, CircularProgress, Box, Avatar } from '@mui/material';
+import EditProfile from './EditProfile';
 
 const Profile = () => {
   const { user, userData } = useContext(AppContext);
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState(null);
+  const [editProfileMode, setEditProfileMode] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -28,6 +30,10 @@ const Profile = () => {
     fetchProfileData();
   }, [user, navigate]);
 
+  const cancelEditMode = () => {
+    setEditProfileMode(false);
+  };
+
   if (!profileData) {
     return <CircularProgress />;
   }
@@ -35,18 +41,28 @@ const Profile = () => {
   return (
     <Container>
       <Box sx={{ mt: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Profile
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          Username: {profileData.handle}
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          Email: {profileData.email}
-        </Typography>
-        <Button variant="contained" color="primary" onClick={() => navigate('/edit-profile')}>
-          Edit Profile
-        </Button>
+        {editProfileMode ? (
+          <EditProfile cancelEditMode={cancelEditMode} initialData={profileData} />
+        ) : (
+          <>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Profile
+            </Typography>
+            <Avatar src={profileData.photoUrl} sx={{ width: 100, height: 100 }} />
+            <Typography variant="h6" gutterBottom>
+              Username: {profileData.handle}
+            </Typography>
+            <Typography variant="h6" gutterBottom>
+              Email: {profileData.email}
+            </Typography>
+            <Typography variant="h6" gutterBottom>
+              Phone: {profileData.phone}
+            </Typography>
+            <Button variant="contained" color="primary" onClick={() => setEditProfileMode(true)}>
+              Edit Profile
+            </Button>
+          </>
+        )}
       </Box>
     </Container>
   );
