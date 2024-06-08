@@ -1,16 +1,25 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../context/AppContext.jsx';
 import { updateUserHandle } from '../../services/users.service.js';
-import { useNavigate } from 'react-router-dom';
-import { Container, TextField, Button, Typography, Box } from '@mui/material';
+import { uploadPhoto } from '../../services/storage.service.js'; // Import the new upload function
+import { Container, TextField, Button, Typography, Box, CircularProgress } from '@mui/material';
 
-const EditProfile = () => {
-  const { user, userData, setAppState } = useContext(AppContext);
+const EditProfile = ({ cancelEditMode, initialData }) => {
+  const { user, setAppState } = useContext(AppContext);
   const [form, setForm] = useState({
-    handle: userData.handle,
-    email: userData.email
+    phone: '',
+    photoUrl: '',
   });
-  const navigate = useNavigate();
+  const [photoFile, setPhotoFile] = useState(null); // State to hold the selected file
+
+  useEffect(() => {
+    if (initialData) {
+      setForm({
+        phone: initialData.phone || '',
+        photoUrl: initialData.photoUrl || '',
+      });
+    }
+  }, [initialData]);
 
   const updateForm = prop => e => {
     setForm({
@@ -19,18 +28,31 @@ const EditProfile = () => {
     });
   };
 
+  const handleFileChange = e => {
+    setPhotoFile(e.target.files[0]);
+  };
+
   const saveProfile = async () => {
+    if (!form.phone && !photoFile) return; // Ensure we have some data to update
     try {
-      await updateUserHandle(userData.handle, form);
+      if (photoFile) {
+        const photoUrl = await uploadPhoto(photoFile, user.uid); // Upload photo and get URL
+        form.photoUrl = photoUrl; // Update form with the new photo URL
+      }
+      await updateUserHandle(user.uid, form); // Use uid instead of handle for consistency
       setAppState(prevState => ({
         ...prevState,
         userData: { ...prevState.userData, ...form }
       }));
-      navigate('/profile');
+      cancelEditMode();
     } catch (error) {
       console.error('Failed to update profile:', error);
     }
   };
+
+  if (!form) {
+    return <CircularProgress />;
+  }
 
   return (
     <Container>
@@ -39,21 +61,24 @@ const EditProfile = () => {
           Edit Profile
         </Typography>
         <TextField
-          label="Username"
-          value={form.handle}
-          onChange={updateForm('handle')}
+          label="Phone"
+          value={form.phone}
+          onChange={updateForm('phone')}
           fullWidth
           margin="normal"
+          sx={{ backgroundColor: '#f9f9f9'}}
         />
-        <TextField
-          label="Email"
-          value={form.email}
-          onChange={updateForm('email')}
-          fullWidth
-          margin="normal"
+        
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
         />
-        <Button variant="contained" color="primary" onClick={saveProfile}>
+        <Button variant="contained" color="primary" onClick={saveProfile} sx={{ mr: 2 }}>
           Save
+        </Button>
+        <Button variant="outlined" color="secondary" onClick={cancelEditMode}>
+          Cancel
         </Button>
       </Box>
     </Container>
