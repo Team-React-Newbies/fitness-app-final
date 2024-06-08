@@ -16,7 +16,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from './config/firebase-config.js';
 import Exercises from './views/Exercises.jsx';
 import Goals from './views/Goals.jsx';
-import Profile from './components/Profile/Profile.jsx';
+import Profile from './views/Profile.jsx';
 import EditProfile from './components/Profile/EditProfile.jsx';
 
 function App() {

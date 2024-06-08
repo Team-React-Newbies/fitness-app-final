@@ -60,3 +60,7 @@
 footer {
   display: none;  
 }
+
+.content-container {
+  margin-top: 70px;
+}
