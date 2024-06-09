@@ -34,6 +34,7 @@ const ExerciseManager = () => {
       return false;
     }
     setError('');
+    setError("Pesho")
     return true;
   };
 
