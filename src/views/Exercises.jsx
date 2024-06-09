@@ -42,7 +42,7 @@ const ExerciseManager = () => {
       setError('Please provide either duration or steps for the exercise.');
       return false;
     }
-    setError('');
+    setError('error');
     return true;
   };
 
