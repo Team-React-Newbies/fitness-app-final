@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { createExercise, getExercises, updateExercise, deleteExercise } from '../services/exercises.service.js';
 import { AppContext } from '../context/AppContext';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography, Grid, Card, CardContent, IconButton, FormControl, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
+import { Search, Delete, Edit } from '@mui/icons-material';
 import strength from '../assets/ExerciseGoalsIcons/strength.svg';
 import flexibility from '../assets/ExerciseGoalsIcons/flexibility.svg';
 import cardio from '../assets/ExerciseGoalsIcons/cardio.svg';
@@ -16,6 +16,8 @@ const icons = {
 const ExerciseManager = () => {
   const { userData } = useContext(AppContext); // Assuming userData contains the handle
   const [exercises, setExercises] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredExercises, setFilteredExercises] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentExercise, setCurrentExercise] = useState(null);
   const [newExercise, setNewExercise] = useState({ title: '', detailType: '', detailValue: '', icon: '' });
@@ -26,10 +28,19 @@ const ExerciseManager = () => {
       const exercisesData = await getExercises();
       const userExercises = Object.values(exercisesData).filter(exercise => exercise.owner === userData.handle);
       setExercises(userExercises);
+      setFilteredExercises(userExercises);
     };
 
     fetchExercises();
   }, [userData.handle]);
+
+  useEffect(() => {
+    setFilteredExercises(
+      exercises.filter(exercise => 
+        exercise.title.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, exercises]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -83,6 +94,7 @@ const ExerciseManager = () => {
     const updatedExercises = await getExercises();
     const userExercises = Object.values(updatedExercises).filter(exercise => exercise.owner === userData.handle);
     setExercises(userExercises);
+    setFilteredExercises(userExercises);
     setOpen(false);
     setNewExercise({ title: '', detailType: '', detailValue: '', icon: '' });
     setCurrentExercise(null);
@@ -99,6 +111,7 @@ const ExerciseManager = () => {
     const updatedExercises = await getExercises();
     const userExercises = Object.values(updatedExercises).filter(exercise => exercise.owner === userData.handle);
     setExercises(userExercises);
+    setFilteredExercises(userExercises);
   };
 
   return (
@@ -106,12 +119,24 @@ const ExerciseManager = () => {
       <Typography variant="h4" gutterBottom>
         Exercise Manager
       </Typography>
+      <TextField
+        label="Search Exercises"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        fullWidth
+        margin="normal"
+        InputProps={{
+          startAdornment: (
+            <Search />
+          ),
+        }}
+      />
       <Button variant="contained" style={{ backgroundColor: 'red', color: 'white' }} onClick={() => setOpen(true)}>
         Create Exercise
       </Button>
       <div style={{ marginTop: '20px' }}>
         <Grid container spacing={2}>
-          {exercises.map((exercise) => (
+          {filteredExercises.map((exercise) => (
             <Grid item key={exercise.title} xs={12} sm={6} md={4}>
               <Card>
                 <CardContent>
