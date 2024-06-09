@@ -35,6 +35,7 @@ const ExerciseManager = () => {
     }
     setError('');
     setError("Pesho")
+    setError('tosho')
     return true;
   };
 
