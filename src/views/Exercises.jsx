@@ -156,7 +156,8 @@ const ExerciseManager = () => {
             <Typography component="legend">Detail Type</Typography>
             <RadioGroup name="detailType" value={newExercise.detailType} onChange={handleDetailTypeChange} row>
               <FormControlLabel value="StepsPerDay" control={<Radio />} label="Steps per Day" />    
-              <FormControlLabel value="HoursPerDay" control={<Radio />} label="Hours per Day" />
+              <FormControlLabel value="MinutesPerDay" control={<Radio />} label="Minutes per Day" />
+              <FormControlLabel value="KmPerDay" control={<Radio />} label="Km per Day" />
               <FormControlLabel value="RepsPerDay" control={<Radio />} label="Reps per Day" />
             </RadioGroup>
           </FormControl>
