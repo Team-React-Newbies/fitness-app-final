@@ -39,7 +39,7 @@ const ExerciseManager = () => {
 
   const validateExerciseDetails = (duration, steps) => {
     if (!duration && !steps) {
-      setError('Please provide either duration or steps for the exercise.');
+      setError('Provide either duration or steps for the exercise.');
       return false;
     }
     setError('');
