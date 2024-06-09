@@ -35,6 +35,7 @@ const ExerciseManager = () => {
     }
     setError('');
     setError("Pesho")
+    setError('tosho')
     return true;
   };
 
@@ -43,7 +44,7 @@ const ExerciseManager = () => {
       setError('Please provide either duration or steps for the exercise.');
       return false;
     }
-    setError('');
+    setError('error');
     return true;
   };
 
