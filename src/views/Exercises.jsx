@@ -1,27 +1,47 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { createExercise, getExercises } from '../services/exercises.service.js';
+import { createExercise, getExercises, updateExercise, deleteExercise } from '../services/exercises.service.js';
 import { AppContext } from '../context/AppContext';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography, Grid, Card, CardContent } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography, Grid, Card, CardContent, IconButton, FormControl, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
+import strength from '../assets/ExerciseGoalsIcons/strength.svg';
+import flexibility from '../assets/ExerciseGoalsIcons/flexibility.svg';
+import cardio from '../assets/ExerciseGoalsIcons/cardio.svg';
+
+const icons = {
+  strength: strength,
+  flexibility: flexibility,
+  cardio: cardio
+};
 
 const ExerciseManager = () => {
-  const { user, userData } = useContext(AppContext); // Assuming userData contains the handle
-  const [exercises, setExercises] = useState({});
+  const { userData } = useContext(AppContext); // Assuming userData contains the handle
+  const [exercises, setExercises] = useState([]);
   const [open, setOpen] = useState(false);
-  const [newExercise, setNewExercise] = useState({ title: '', duration: '', steps: '' });
+  const [currentExercise, setCurrentExercise] = useState(null);
+  const [newExercise, setNewExercise] = useState({ title: '', detailType: '', detailValue: '', icon: '' });
   const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchExercises = async () => {
       const exercisesData = await getExercises();
-      setExercises(exercisesData);
+      const userExercises = Object.values(exercisesData).filter(exercise => exercise.owner === userData.handle);
+      setExercises(userExercises);
     };
 
     fetchExercises();
-  }, []);
+  }, [userData.handle]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewExercise({ ...newExercise, [name]: value });
+  };
+
+  const handleDetailTypeChange = (e) => {
+    setNewExercise({ ...newExercise, detailType: e.target.value, detailValue: '' });
+  };
+
+  const handleIconChange = (e) => {
+    setNewExercise({ ...newExercise, icon: e.target.value });
   };
 
   const validateExerciseTitle = (title) => {
@@ -29,38 +49,56 @@ const ExerciseManager = () => {
       setError('Exercise title must be between 4 and 30 characters.');
       return false;
     }
-    if (exercises[title]) {
+    if (currentExercise === null && exercises.some(ex => ex.title === title)) {
       setError('Exercise title must be unique.');
       return false;
     }
     setError('');
-    setError("Pesho")
-    setError('tosho')
     return true;
   };
 
-  const validateExerciseDetails = (duration, steps) => {
-    if (!duration && !steps) {
-      setError('Provide either duration or steps for the exercise.');
+  const validateExerciseDetails = (detailType, detailValue) => {
+    if (!detailType || !detailValue) {
+      setError('Please provide valid details for the exercise.');
       return false;
     }
-    setError('error');
+    setError('');
     return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { title, duration, steps } = newExercise;
+    const { title, detailType, detailValue, icon } = newExercise;
 
-    if (!validateExerciseTitle(title) || !validateExerciseDetails(duration, steps)) {
+    if (!validateExerciseTitle(title) || !validateExerciseDetails(detailType, detailValue)) {
       return;
     }
 
-    await createExercise(title, userData.handle, duration, steps); // Using userData.handle as owner
+    if (currentExercise) {
+      await updateExercise(currentExercise.title, { title, detailType, detailValue, icon });
+    } else {
+      await createExercise(title, userData.handle, detailType, detailValue, icon); // Using userData.handle as owner
+    }
+
     const updatedExercises = await getExercises();
-    setExercises(updatedExercises);
+    const userExercises = Object.values(updatedExercises).filter(exercise => exercise.owner === userData.handle);
+    setExercises(userExercises);
     setOpen(false);
-    setNewExercise({ title: '', duration: '', steps: '' });
+    setNewExercise({ title: '', detailType: '', detailValue: '', icon: '' });
+    setCurrentExercise(null);
+  };
+
+  const handleEdit = (exercise) => {
+    setCurrentExercise(exercise);
+    setNewExercise({ title: exercise.title, detailType: exercise.detailType, detailValue: exercise.detailValue, icon: exercise.icon });
+    setOpen(true);
+  };
+
+  const handleDelete = async (title) => {
+    await deleteExercise(title);
+    const updatedExercises = await getExercises();
+    const userExercises = Object.values(updatedExercises).filter(exercise => exercise.owner === userData.handle);
+    setExercises(userExercises);
   };
 
   return (
@@ -68,11 +106,40 @@ const ExerciseManager = () => {
       <Typography variant="h4" gutterBottom>
         Exercise Manager
       </Typography>
-      <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
+      <Button variant="contained" style={{ backgroundColor: 'red', color: 'white' }} onClick={() => setOpen(true)}>
         Create Exercise
       </Button>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>Create a new exercise</DialogTitle>
+      <div style={{ marginTop: '20px' }}>
+        <Grid container spacing={2}>
+          {exercises.map((exercise) => (
+            <Grid item key={exercise.title} xs={12} sm={6} md={4}>
+              <Card>
+                <CardContent>
+                  {exercise.icon && (
+                    <img 
+                      src={icons[exercise.icon]}
+                      alt={exercise.icon}
+                      style={{ width: '100px', height: '100px', display: 'block', margin: '0 auto' }}
+                    />
+                  )}
+                  <Typography variant="h5" component="h2" align="center">
+                    {exercise.title}
+                  </Typography>
+                  <Typography color="textSecondary" align="center">
+                    {exercise.detailType}: {exercise.detailValue}
+                  </Typography>
+                  <div style={{ textAlign: 'center' }}>
+                    <IconButton onClick={() => handleEdit(exercise)}><Edit /></IconButton>
+                    <IconButton onClick={() => handleDelete(exercise.title)}><Delete /></IconButton>
+                  </div>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </div>
+      <Dialog open={open} onClose={() => { setOpen(false); setCurrentExercise(null); }}>
+        <DialogTitle>{currentExercise ? 'Edit Exercise' : 'Create a new exercise'}</DialogTitle>
         <DialogContent>
           {error && <Typography color="error">{error}</Typography>}
           <TextField
@@ -85,25 +152,46 @@ const ExerciseManager = () => {
             onChange={handleInputChange}
             required
           />
+          <FormControl fullWidth margin="dense">
+            <Typography component="legend">Detail Type</Typography>
+            <RadioGroup name="detailType" value={newExercise.detailType} onChange={handleDetailTypeChange} row>
+              <FormControlLabel value="StepsPerDay" control={<Radio />} label="Steps per Day" />    
+              <FormControlLabel value="HoursPerDay" control={<Radio />} label="Hours per Day" />
+              <FormControlLabel value="RepsPerDay" control={<Radio />} label="Reps per Day" />
+            </RadioGroup>
+          </FormControl>
           <TextField
             margin="dense"
-            name="duration"
-            label="Duration"
+            name="detailValue"
+            label="Detail Value"
             fullWidth
-            value={newExercise.duration}
+            value={newExercise.detailValue}
             onChange={handleInputChange}
+            required
           />
-          <TextField
-            margin="dense"
-            name="steps"
-            label="Steps"
-            fullWidth
-            value={newExercise.steps}
-            onChange={handleInputChange}
-          />
+          <FormControl component="fieldset" margin="dense">
+            <Typography component="legend">Select Icon</Typography>
+            <RadioGroup name="icon" value={newExercise.icon} onChange={handleIconChange} row>
+              <FormControlLabel
+                value="strength"
+                control={<Radio icon={<img src={strength} alt="strength" style={{ width: '50px', height: '50px' }} />} checkedIcon={<img src={strength} alt="strength" style={{ width: '50px', height: '50px' }} />} />}
+                label="Strength"
+              />
+              <FormControlLabel
+                value="cardio"
+                control={<Radio icon={<img src={cardio} alt="cardio" style={{ width: '50px', height: '50px' }} />} checkedIcon={<img src={cardio} alt="cardio" style={{ width: '50px', height: '50px' }} />} />}
+                label="Cardio"
+              />
+              <FormControlLabel
+                value="flexibility"
+                control={<Radio icon={<img src={flexibility} alt="flexibility" style={{ width: '50px', height: '50px' }} />} checkedIcon={<img src={flexibility} alt="flexibility" style={{ width: '50px', height: '50px' }} />} />}
+                label="Flexibility"
+              />
+            </RadioGroup>
+          </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
+          <Button onClick={() => { setOpen(false); setCurrentExercise(null); }} color="primary">
             Cancel
           </Button>
           <Button onClick={handleSubmit} color="primary">
@@ -111,28 +199,6 @@ const ExerciseManager = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Grid container spacing={2}>
-        {Object.keys(exercises).map((title) => (
-          <Grid item key={title} xs={12} sm={6} md={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h5" component="h2">
-                  {title}
-                </Typography>
-                <Typography color="textSecondary">
-                  Duration: {exercises[title].duration || 'N/A'}
-                </Typography>
-                <Typography color="textSecondary">
-                  Steps: {exercises[title].steps || 'N/A'}
-                </Typography>
-                <Typography color="textSecondary">
-                  Owner: {exercises[title].owner}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
     </div>
   );
 };
