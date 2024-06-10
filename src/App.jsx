@@ -19,9 +19,10 @@ import Goals from './views/Goals.jsx';
 import Profile from './views/Profile.jsx';
 import EditProfile from './components/Profile/EditProfile.jsx';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 const darkTheme = createTheme({
-  pallette: {
+  palette: {
     mode: 'dark',
   },
 });
