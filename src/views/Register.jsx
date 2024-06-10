@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from "../context/AppContext.jsx";
 import { useNavigate } from "react-router-dom";
 import { createUserHandle, getUserByHandle, getUserData } from "../services/users.service";
@@ -11,8 +11,11 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { uploadPhoto } from '../services/storage.service.js';
+import Avatar from '@mui/material/Avatar';
+
 
 export default function Register() {
+    const fileInput = useRef();
     const [form, setForm] = useState({
         username: '',
         email: '',
@@ -84,7 +87,7 @@ export default function Register() {
         }
         try {
             const user = await getUserByHandle(form.username);
-            if (user.exists()) {
+            if (user && user.exists()) {
                 return console.log('User with this username already exists!');
             }
             const credential = await registerUser(form.email, form.password, form.username, form.phone);
@@ -123,6 +126,22 @@ export default function Register() {
                     <Box component="form" sx={{ mt: 1 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
+                          
+            <Avatar
+              sx={{ width: 100, height: 100, cursor: 'pointer' }} 
+                onClick={() => fileInput.current.click()}
+                slotProps={{ img:photoFile  }}
+
+            ></Avatar>
+             <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                    style={{ display: 'none'}}
+                                    ref={fileInput}
+                                />
+          
+          
                                 <TextField
                                     margin="normal"
                                     required
