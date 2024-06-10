@@ -41,7 +41,6 @@ export default function Login() {
       } else {
         navigate('/');
       }
-            console.log('user', user);
       setAppState({ user, userData: null });
     } catch (error) {
       console.error('Login failed:', error);

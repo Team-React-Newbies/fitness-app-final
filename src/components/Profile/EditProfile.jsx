@@ -5,7 +5,7 @@ import { uploadPhoto } from '../../services/storage.service.js';
 import { Container, TextField, Button, Typography, Box, CircularProgress, Paper, Grid, Avatar } from '@mui/material';
 
 const EditProfile = ({ cancelEditMode, initialData }) => {
-  const { user, setAppState } = useContext(AppContext);
+  const { user, userData, setAppState } = useContext(AppContext);
   const [form, setForm] = useState({
     username: '',
     age: '',
@@ -47,7 +47,7 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
         const photoUrl = await uploadPhoto(photoFile, user.uid);
         form.photoUrl = photoUrl;
       }
-      await updateUserHandle(user.uid, form);
+      await updateUserHandle(userData.handle, form);
       setAppState(prevState => ({
         ...prevState,
         userData: { ...prevState.userData, ...form }
@@ -84,7 +84,6 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
                 onChange={updateForm('username')}
                 fullWidth
                 margin="normal"
-                sx={{ backgroundColor: '#f9f9f9'}}
               />
             </Grid>
             <Grid item xs={12}>
@@ -94,7 +93,6 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
                 onChange={updateForm('age')}
                 fullWidth
                 margin="normal"
-                sx={{ backgroundColor: '#f9f9f9'}}
               />
             </Grid>
             <Grid item xs={12}>
@@ -104,7 +102,6 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
                 onChange={updateForm('weight')}
                 fullWidth
                 margin="normal"
-                sx={{ backgroundColor: '#f9f9f9'}}
               />
             </Grid>
             <Grid item xs={12}>
@@ -114,7 +111,6 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
                 onChange={updateForm('height')}
                 fullWidth
                 margin="normal"
-                sx={{ backgroundColor: '#f9f9f9'}}
               />
             </Grid>
             <Grid item xs={12}>
@@ -124,7 +120,6 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
                 onChange={updateForm('phone')}
                 fullWidth
                 margin="normal"
-                sx={{ backgroundColor: '#f9f9f9'}}
               />
             </Grid>
             <Grid item xs={12}>
