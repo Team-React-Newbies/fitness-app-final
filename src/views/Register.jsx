@@ -90,9 +90,13 @@ export default function Register() {
             const credential = await registerUser(form.email, form.password, form.username, form.phone);
             const photoUrl = await uploadPhoto(photoFile, credential.user.uid);
             await createUserHandle(form.username, credential.user.uid, credential.user.email, form.phone, photoUrl, form.name, form.age, form.weight, form.height);
-            const userData = await getUserData(credential.user.uid);
-            console.log(userData.val());
-            setAppState({ user: credential.user, userData: userData.val() });
+            
+            getUserData(credential.user.uid)
+        .then((snapshot) => {
+          const userData = snapshot.val() && Object.values(snapshot.val())[0];
+          setAppState({ user: credential.user, userData: userData });
+        })
+        .catch((error) => console.error("Failed to fetch user data:", error));
             navigate('/');
         } catch (error) {
             if (error.message.includes('auth/email-already-in-use')) {
