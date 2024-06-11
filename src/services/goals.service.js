@@ -1,12 +1,12 @@
 import { ref, set, get, update, remove, push } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 
-export const createGoal = (title, ownerHandle, goalIcon, from, to) => {
+export const createGoal = (goalName, ownerHandle, goalIcon, from, to) => {
   const goalRef = ref(db, 'goals');
   const newGoalRef = push(goalRef); // Generate a new unique key for each goal
-  return set(newGoalRef, {
+    return set(ref(db, `goals/${goalName}`), {
     id: newGoalRef.key, // Use the generated key as the identifier
-    title,
+    goalName,
     goalIcon,
     from,
     to,
@@ -25,12 +25,12 @@ export const getGoals = async () => {
   }
 };
 
-export const updateGoal = (title, updates) => {
-  const goalRef = ref(db, `goals/${title}`);
+export const updateGoal = (goalName, updates) => {
+  const goalRef = ref(db, `goals/${goalName}`);
   return update(goalRef, updates);
 };
 
-export const deleteGoal = (title) => {
-  const goalRef = ref(db, `goals/${title}`);
+export const deleteGoal = (goalName) => {
+  const goalRef = ref(db, `goals/${goalName}`);
   return remove(goalRef);
 };
