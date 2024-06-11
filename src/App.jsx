@@ -18,6 +18,15 @@ import Exercises from './views/Exercises.jsx';
 import Goals from './views/Goals.jsx';
 import Profile from './views/Profile.jsx';
 import EditProfile from './components/Profile/EditProfile.jsx';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+
 
 function App() {
   const [appState, setAppState] = useState({
@@ -44,6 +53,7 @@ function App() {
   }, [appState.user]);
 
   return (
+        <ThemeProvider theme={darkTheme}>
     <BrowserRouter>
       <AppContext.Provider value={{ ...appState, setAppState }}>
         <div className="app-container">
@@ -67,6 +77,7 @@ function App() {
         </div>
       </AppContext.Provider>
     </BrowserRouter>
+        </ThemeProvider>
   );
 }
 
