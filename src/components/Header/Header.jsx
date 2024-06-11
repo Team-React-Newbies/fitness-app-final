@@ -99,7 +99,6 @@ export default function Header() {
                 <div className="top-nav">
                     <nav className="nav-container">
                     <NavLink to="/" className="nav-link">Home</NavLink>
-                        <NavLink to="/posts" className="nav-link">Prep</NavLink>
 
                         {user && userData && !userData.isBlocked && (
                             <>

@@ -88,7 +88,7 @@ export default function Login() {
                   InputProps={{
                     style: { color: 'black' },
                   }}
-                  InpzutLabelProps={{
+                  InputLabelProps={{
                     style: { color: 'grey' },
                   }}
                 />
