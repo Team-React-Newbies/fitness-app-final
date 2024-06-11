@@ -15,6 +15,7 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
     photoUrl: '',
   });
   const [photoFile, setPhotoFile] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (initialData) {
@@ -40,8 +41,36 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
     setPhotoFile(e.target.files[0]);
   };
 
+  const validateForm = () => {
+    const { username, age, weight, height, phone } = form;
+    const phoneRegex = /^\d{10}$/;
+    const ageRegex = /^\d+$/;
+    const weightHeightRegex = /^\d+(\.\d+)?$/;
+    if (!username || username.length < 2 || username.length > 20) {
+      return 'Username must be between 2 and 20 characters';
+    }
+    if (!phoneRegex.test(phone)) {
+      return 'Phone number must be 10 digits';
+    }
+    if (!ageRegex.test(age)) {
+      return 'Age must be a valid number';
+    }
+    if (!weightHeightRegex.test(weight)) {
+      return 'Weight must be a valid number';
+    }
+    if (!weightHeightRegex.test(height)) {
+      return 'Height must be a valid number';
+    }
+    return null;
+  };
+
   const saveProfile = async () => {
+    const validationError = validateForm();
     if (!form.phone && !photoFile) return;
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
     try {
       if (photoFile) {
         const photoUrl = await uploadPhoto(photoFile, user.uid);
@@ -54,7 +83,7 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
       }));
       cancelEditMode();
     } catch (error) {
-      console.error('Failed to update profile:', error);
+      setError('Failed to update profile:' + error.message);
     }
   };
 
@@ -76,6 +105,7 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
           <Typography variant="h4" component="h1" gutterBottom>
             Edit Profile
           </Typography>
+          {error && <Typography color="error">{error}</Typography>}
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField

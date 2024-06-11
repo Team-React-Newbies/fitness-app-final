@@ -28,6 +28,7 @@ export default function Register() {
         photoUrl: '',
     });
     const [photoFile, setPhotoFile] = useState(null);
+    const [error, setError] = useState('');
     const { user, setAppState } = useContext(AppContext);
     const navigate = useNavigate();
 
@@ -82,13 +83,14 @@ export default function Register() {
     const register = async () => {
         const validationError = validateForm();
         if (validationError) {
-            console.log(validationError);
+            setError(validationError);
             return;
         }
         try {
             const user = await getUserByHandle(form.username);
             if (user && user.exists()) {
-                return console.log('User with this username already exists!');
+                setError('User with this username already exists!');
+                return;
             }
             const credential = await registerUser(form.email, form.password, form.username, form.phone);
             const photoUrl = await uploadPhoto(photoFile, credential.user.uid);
@@ -103,9 +105,9 @@ export default function Register() {
             navigate('/');
         } catch (error) {
             if (error.message.includes('auth/email-already-in-use')) {
-                console.log('User has already been registered!');
+                setError('User has already been registered!');
             } else {
-                console.error('Failed to register:', error);
+                setError('Failed to register:' + error.message);
             }
         }
     };
@@ -123,6 +125,7 @@ export default function Register() {
                     <Typography component="h1" variant="h5">
                         Register
                     </Typography>
+                    {error && <Typography color="error">{error}</Typography>}
                     <Box component="form" sx={{ mt: 1 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>

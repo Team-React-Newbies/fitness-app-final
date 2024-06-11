@@ -19,6 +19,7 @@ export default function Login() {
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -43,7 +44,7 @@ export default function Login() {
       }
       setAppState({ user, userData: null });
     } catch (error) {
-      console.error('Login failed:', error);
+      setError('Login failed:' + error.message);
     } finally {
       setLoading(false);
     }
@@ -69,6 +70,7 @@ export default function Login() {
           <Typography component="h1" variant="h5" gutterBottom>
             Login
           </Typography>
+          {error && <Typography color="error">{error}</Typography>}
           <Box component="form" sx={{ mt: 1 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -86,7 +88,7 @@ export default function Login() {
                   InputProps={{
                     style: { color: 'black' },
                   }}
-                  InputLabelProps={{
+                  InpzutLabelProps={{
                     style: { color: 'grey' },
                   }}
                 />
