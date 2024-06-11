@@ -2,14 +2,14 @@
     position: relative;
     background-size: cover;
     background-position: center;
-    height: 86vh;
+    height: 85vh;
     color: rgb(223, 132, 132);
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    overflow: hidden; /* Ensures the video doesn't overflow the container */
-    margin-top: -30px; /* Offset the fixed header */
+    /* overflow: hidden; Ensures the video doesn't overflow the container */
+    /* margin-top: -30px; Offset the fixed header */
 }
 
 .audio-player {

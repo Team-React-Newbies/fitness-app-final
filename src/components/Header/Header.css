@@ -117,11 +117,11 @@
   padding: 8px 12px;
   border-radius: 5px;
   font-size: 16px;
-  text-shadow: 0 0 8px #00ff00, 0 0 16px #00ff00;
+  text-shadow: 0 0 8px #c1cdc1, 0 0 16px #c8d1c8;
 }
 
 .nav-link:hover, .auth-link:hover, button:hover {
-  background-color: #7467a0;
+  background-color: #999999cc;
 }
 
 .auth-links {
@@ -152,11 +152,11 @@
 }
 
 .button-logout {
-  background-color: #5e4b8b;
+  background-color: #070708;
 }
 
 .button-logout:hover {
-  background-color: #7467a0;
+  background-color: #040404;
 } 
 
 .header-avatar:hover {
