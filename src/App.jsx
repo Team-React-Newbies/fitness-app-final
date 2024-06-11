@@ -18,6 +18,7 @@ import Exercises from './views/Exercises.jsx';
 import Goals from './views/Goals.jsx';
 import Profile from './views/Profile.jsx';
 import EditProfile from './components/Profile/EditProfile.jsx';
+import ExerciseVideos from './views/ExerciseVideos.jsx';
 
 function App() {
   const [appState, setAppState] = useState({
@@ -57,6 +58,7 @@ function App() {
               <Route path="/edit-profile" element={<Authenticated><EditProfile /></Authenticated>} />
               <Route path="/admin-dashboard" element={<Authenticated><AdminView /></Authenticated>} />
               <Route path="/posts" element={<Authenticated><AllPosts /></Authenticated>} />
+              <Route path="/exercise-videos" element={<Authenticated><ExerciseVideos/></Authenticated>} />
               <Route path="/exercises" element={<Authenticated><Exercises /></Authenticated>} />
               <Route path="/goals" element={<Authenticated><Goals /></Authenticated>} />
   
