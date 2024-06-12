@@ -17,8 +17,10 @@ import Exercises from './views/Exercises.jsx';
 import Goals from './views/Goals.jsx';
 import Profile from './views/Profile.jsx';
 import EditProfile from './components/Profile/EditProfile.jsx';
+import ExerciseVideos from './views/ExerciseVideos.jsx';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import Surprise from './views/SurpriseChallengeView/SurpriseChallengeView.jsx';
 
 const darkTheme = createTheme({
   palette: {
@@ -65,6 +67,8 @@ function App() {
               <Route path="/profile" element={<Authenticated><Profile /></Authenticated>} />
               <Route path="/edit-profile" element={<Authenticated><EditProfile /></Authenticated>} />
               <Route path="/admin-dashboard" element={<Authenticated><AdminView /></Authenticated>} />
+              <Route path="/surprise-challenge" element={<Authenticated><Surprise /></Authenticated>} />
+              <Route path="/exercise-videos" element={<Authenticated><ExerciseVideos/></Authenticated>} />
               <Route path="/exercises" element={<Authenticated><Exercises /></Authenticated>} />
               <Route path="/goals" element={<Authenticated><Goals /></Authenticated>} />
   
