@@ -35,21 +35,6 @@ export default function Home() {
     fetchAudioUrl();
   }, []);
 
-  useEffect(() => {
-    if (audioUrl && audioRef.current) {
-      audioRef.current.play().catch((error) => {
-        console.error("Error attempting to play audio:", error);
-        const playOnInteraction = () => {
-          audioRef.current.play().catch((playError) => {
-            console.error("Error playing audio after interaction:", playError);
-          });
-          document.removeEventListener("click", playOnInteraction);
-        };
-        document.addEventListener("click", playOnInteraction);
-      });
-    }
-  }, [audioUrl]);
-
   return (
     <>
       <video className="background-video" autoPlay loop muted>
@@ -68,7 +53,7 @@ export default function Home() {
           </div>
         </div>
         {audioUrl && (
-          <audio ref={audioRef} controls autoPlay className="audio-player">
+          <audio ref={audioRef} controls className="audio-player">
             <source src={audioUrl} type="audio/mp3" />
             Your browser does not support the audio element.
           </audio>
