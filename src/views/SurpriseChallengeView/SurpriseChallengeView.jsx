@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { fetchRandomGoal } from "../../services/surprise.service.js"; // Adjust the import path as needed
+import {
+  fetchRandomGoal,
+  fetchRandomSofiaChallenge,
+} from "../../services/surprise.service.js"; // Adjust the import path as needed
 import Button from "../../components/Button.jsx";
 import "./SurpriseChallengeView.css"; // Import the CSS file
 
@@ -11,6 +14,14 @@ const Surprise = () => {
     const randomGoal = await fetchRandomGoal();
     if (randomGoal) {
       setGoal(randomGoal);
+      setAnimate(true);
+    }
+  };
+
+  const handleSofiaButtonClick = async () => {
+    const randomChallenge = await fetchRandomSofiaChallenge();
+    if (randomChallenge) {
+      setGoal(randomChallenge);
       setAnimate(true);
     }
   };
@@ -27,9 +38,16 @@ const Surprise = () => {
       {goal && (
         <p className={`goal-text ${animate ? "animate" : ""}`}>{goal}</p>
       )}
-      <Button className="surprise-button" onClick={handleButtonClick}>
-        Random Daily challenge. Do it!🦸‍♂️
-      </Button>
+      <div className="half">
+        <Button className="surprise-button" onClick={handleButtonClick}>
+          Solo Daily Challenge. Do it!🦸‍♂️
+        </Button>
+      </div>
+      <div className="half">
+        <Button className="surprise-button" onClick={handleSofiaButtonClick}>
+          Sofia Group Daily Challenge! 🤝
+        </Button>
+      </div>
     </div>
   );
 };

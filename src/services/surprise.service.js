@@ -20,3 +20,25 @@ export const fetchRandomGoal = async () => {
     return null;
   }
 };
+
+export const fetchRandomSofiaChallenge = async () => {
+  try {
+    const challengesRef = ref(db, "sofia-group-challenges");
+    const snapshot = await get(challengesRef);
+    if (snapshot.exists()) {
+      const challenges = snapshot.val();
+      const challengeTitles = Object.values(challenges).map(
+        (challenge) => challenge.title
+      );
+      const randomTitle =
+        challengeTitles[Math.floor(Math.random() * challengeTitles.length)];
+      return randomTitle;
+    } else {
+      console.log("No data available");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+    return null;
+  }
+};
