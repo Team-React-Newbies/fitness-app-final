@@ -12,7 +12,8 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { uploadPhoto } from '../services/storage.service.js';
 import Avatar from '@mui/material/Avatar';
-
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export default function Register() {
     const fileInput = useRef();
@@ -29,6 +30,7 @@ export default function Register() {
     });
     const [photoFile, setPhotoFile] = useState(null);
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const { user, setAppState } = useContext(AppContext);
     const navigate = useNavigate();
 
@@ -45,16 +47,29 @@ export default function Register() {
         }));
     };
 
-    const handleFileChange = e => {
-        setPhotoFile(e.target.files[0]);
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            try {
+                const photoUrl = await uploadPhoto(file, `temp/${file.name}`);
+                setPhotoFile(file);
+                setForm(form => ({
+                    ...form,
+                    photoUrl: photoUrl,
+                }));
+            } catch (error) {
+                setError('Failed to upload photo: ' + error.message);
+            }
+        }
     };
 
     const validateForm = () => {
         const { username, email, password, phone, name, age, weight, height } = form;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^\d{10}$/;
-        const ageRegex = /^\d+$/;
-        const weightHeightRegex = /^\d+(\.\d+)?$/;
+        const ageRegex = /^\d{1,3}$/;
+        const weightHeightRegex = /^\d{1,3}$/;
+        const heightRegex = /^[1-2]\d{2}$/;
 
         if (!username || username.length < 2 || username.length > 20) {
             return 'Username must be between 2 and 20 characters';
@@ -66,19 +81,19 @@ export default function Register() {
             return 'Phone number must be 10 digits';
         }
         if (!ageRegex.test(age)) {
-            return 'Age must be a valid number';
+            return 'Age must be a valid number between 1 and 999';
         }
         if (!weightHeightRegex.test(weight)) {
-            return 'Weight must be a valid number';
+            return 'Weight must be a valid number between 1 and 999';
         }
-        if (!weightHeightRegex.test(height)) {
-            return 'Height must be a valid number';
+        if (!heightRegex.test(height)) {
+            return 'Height must be a valid number between 100 and 299 cm';
         }
         if (!photoFile) {
             return 'Photo is required';
         }
         return null;
-    }
+    };
 
     const register = async () => {
         const validationError = validateForm();
@@ -102,6 +117,8 @@ export default function Register() {
           setAppState({ user: credential.user, userData: userData });
         })
         .catch((error) => console.error("Failed to fetch user data:", error));
+            
+            setSuccessMessage('Registration successful!');
             navigate('/');
         } catch (error) {
             if (error.message.includes('auth/email-already-in-use')) {
@@ -127,24 +144,22 @@ export default function Register() {
                     </Typography>
                     {error && <Typography color="error">{error}</Typography>}
                     <Box component="form" sx={{ mt: 1 }}>
-                        <Grid container spacing={2}>
+                        <Grid container spacing={1}>
                             <Grid item xs={12}>
-                          
-            <Avatar
-              sx={{ width: 100, height: 100, cursor: 'pointer' }} 
-                onClick={() => fileInput.current.click()}
-                slotProps={{ img:photoFile  }}
-
-            ></Avatar>
-             <input
+                                <Avatar
+                                    sx={{ width: 100, height: 100, cursor: 'pointer' }} 
+                                    onClick={() => fileInput.current.click()}
+                                    src={form.photoUrl} // Display the uploaded photo
+                                />
+                                <input
                                     type="file"
                                     accept="image/*"
                                     onChange={handleFileChange}
                                     style={{ display: 'none'}}
                                     ref={fileInput}
                                 />
-          
-          
+                            </Grid>
+                            <Grid item xs={6}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -156,15 +171,9 @@ export default function Register() {
                                     autoFocus
                                     value={form.username}
                                     onChange={updateForm('username')}
-                                    InputProps={{
-                                        style: { color: 'black' },
-                                    }}
-                                    InputLabelProps={{
-                                        style: { color: 'grey' },
-                                    }}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={6}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -175,15 +184,9 @@ export default function Register() {
                                     autoComplete="email"
                                     value={form.email}
                                     onChange={updateForm('email')}
-                                    InputProps={{
-                                        style: { color: 'black' },
-                                    }}
-                                    InputLabelProps={{
-                                        style: { color: 'grey' },
-                                    }}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={6}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -195,15 +198,9 @@ export default function Register() {
                                     autoComplete="current-password"
                                     value={form.password}
                                     onChange={updateForm('password')}
-                                    InputProps={{
-                                        style: { color: 'black' },
-                                    }}
-                                    InputLabelProps={{
-                                        style: { color: 'grey' },
-                                    }}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={6}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -213,15 +210,9 @@ export default function Register() {
                                     id="phone"
                                     value={form.phone}
                                     onChange={updateForm('phone')}
-                                    InputProps={{
-                                        style: { color: 'black' },
-                                    }}
-                                    InputLabelProps={{
-                                        style: { color: 'grey' },
-                                    }}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={6}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -231,15 +222,9 @@ export default function Register() {
                                     id="name"
                                     value={form.name}
                                     onChange={updateForm('name')}
-                                    InputProps={{
-                                        style: { color: 'black' },
-                                    }}
-                                    InputLabelProps={{
-                                        style: { color: 'grey' },
-                                    }}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={6}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -249,15 +234,9 @@ export default function Register() {
                                     id="age"
                                     value={form.age}
                                     onChange={updateForm('age')}
-                                    InputProps={{
-                                        style: { color: 'black' },
-                                    }}
-                                    InputLabelProps={{
-                                        style: { color: 'grey' },
-                                    }}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={6}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -267,15 +246,9 @@ export default function Register() {
                                     id="weight"
                                     value={form.weight}
                                     onChange={updateForm('weight')}
-                                    InputProps={{
-                                        style: { color: 'black' },
-                                    }}
-                                    InputLabelProps={{
-                                        style: { color: 'grey' },
-                                    }}
                                 />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={6}>
                                 <TextField
                                     margin="normal"
                                     required
@@ -285,20 +258,6 @@ export default function Register() {
                                     id="height"
                                     value={form.height}
                                     onChange={updateForm('height')}
-                                    InputProps={{
-                                        style: { color: 'black' },
-                                    }}
-                                    InputLabelProps={{
-                                        style: { color: 'grey' },
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={handleFileChange}
-                                    style={{ margin: '20px 0' }}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -316,6 +275,15 @@ export default function Register() {
                     </Box>
                 </Box>
             </Paper>
+            <Snackbar
+                open={Boolean(successMessage)}
+                autoHideDuration={6000}
+                onClose={() => setSuccessMessage('')}
+            >
+                <Alert onClose={() => setSuccessMessage('')} severity="success">
+                    {successMessage}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 }

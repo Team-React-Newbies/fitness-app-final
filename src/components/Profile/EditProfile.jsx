@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../context/AppContext.jsx';
 import { updateUserHandle } from '../../services/users.service.js';
 import { uploadPhoto } from '../../services/storage.service.js';
-import { Container, TextField, Button, Typography, Box, CircularProgress, Paper, Grid, Avatar } from '@mui/material';
+import { Container, TextField, Button, Typography, Box, CircularProgress, Paper, Grid, Avatar, Snackbar, Alert } from '@mui/material';
 
 const EditProfile = ({ cancelEditMode, initialData }) => {
   const { user, userData, setAppState } = useContext(AppContext);
@@ -16,6 +16,7 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
   });
   const [photoFile, setPhotoFile] = useState(null);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     if (initialData) {
@@ -37,15 +38,29 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
     });
   };
 
-  const handleFileChange = e => {
-    setPhotoFile(e.target.files[0]);
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const photoUrl = await uploadPhoto(file, `temp/${file.name}`);
+        setPhotoFile(file);
+        setForm(form => ({
+          ...form,
+          photoUrl: photoUrl,
+        }));
+      } catch (error) {
+        setError('Failed to upload photo: ' + error.message);
+      }
+    }
   };
 
   const validateForm = () => {
     const { username, age, weight, height, phone } = form;
     const phoneRegex = /^\d{10}$/;
-    const ageRegex = /^\d+$/;
-    const weightHeightRegex = /^\d+(\.\d+)?$/;
+    const ageRegex = /^\d{1,3}$/;
+    const weightHeightRegex = /^\d{1,3}$/;
+    const heightRegex = /^[1-2]\d{2}$/;
+
     if (!username || username.length < 2 || username.length > 20) {
       return 'Username must be between 2 and 20 characters';
     }
@@ -53,20 +68,19 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
       return 'Phone number must be 10 digits';
     }
     if (!ageRegex.test(age)) {
-      return 'Age must be a valid number';
+      return 'Age must be a valid number of up to 3 digits';
     }
     if (!weightHeightRegex.test(weight)) {
-      return 'Weight must be a valid number';
+      return 'Weight must be a valid number of up to 3 digits';
     }
-    if (!weightHeightRegex.test(height)) {
-      return 'Height must be a valid number';
+    if (!heightRegex.test(height)) {
+      return 'Height must be a valid number between 100 and 299 cm';
     }
     return null;
   };
 
   const saveProfile = async () => {
     const validationError = validateForm();
-    if (!form.phone && !photoFile) return;
     if (validationError) {
       setError(validationError);
       return;
@@ -81,6 +95,7 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
         ...prevState,
         userData: { ...prevState.userData, ...form }
       }));
+      setSuccessMessage('Profile updated successfully!');
       cancelEditMode();
     } catch (error) {
       setError('Failed to update profile:' + error.message);
@@ -99,15 +114,22 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
             <Avatar 
               src={form.photoUrl} 
               sx={{ width: 100, height: 100, cursor: 'pointer' }} 
-              onClick={cancelEditMode}
+              onClick={() => document.getElementById('photoInput').click()}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+              id="photoInput"
             />
           </Box>
           <Typography variant="h4" component="h1" gutterBottom>
             Edit Profile
           </Typography>
           {error && <Typography color="error">{error}</Typography>}
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
+          <Grid container spacing={1}>
+            <Grid item xs={6}>
               <TextField
                 label="Username"
                 value={form.username}
@@ -116,7 +138,7 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 label="Age"
                 value={form.age}
@@ -125,7 +147,7 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 label="Weight"
                 value={form.weight}
@@ -134,30 +156,22 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
-               label="Height"
+                label="Height"
                 value={form.height}
                 onChange={updateForm('height')}
                 fullWidth
                 margin="normal"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 label="Phone"
                 value={form.phone}
                 onChange={updateForm('phone')}
                 fullWidth
                 margin="normal"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                style={{ margin: '20px 0' }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -171,6 +185,15 @@ const EditProfile = ({ cancelEditMode, initialData }) => {
           </Grid>
         </Paper>
       </Box>
+      <Snackbar
+        open={Boolean(successMessage)}
+        autoHideDuration={6000}
+        onClose={() => setSuccessMessage('')}
+      >
+        <Alert onClose={() => setSuccessMessage('')} severity="success">
+          {successMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
