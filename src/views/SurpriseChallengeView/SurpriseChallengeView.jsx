@@ -9,12 +9,14 @@ import "./SurpriseChallengeView.css"; // Import the CSS file
 const Surprise = () => {
   const [goal, setGoal] = useState("");
   const [animate, setAnimate] = useState(false);
+  const [side, setSide] = useState(""); // New state to track which side's button was clicked
 
   const handleButtonClick = async () => {
     const randomGoal = await fetchRandomGoal();
     if (randomGoal) {
       setGoal(randomGoal);
       setAnimate(true);
+      setSide("left");
     }
   };
 
@@ -23,6 +25,7 @@ const Surprise = () => {
     if (randomChallenge) {
       setGoal(randomChallenge);
       setAnimate(true);
+      setSide("right");
     }
   };
 
@@ -35,15 +38,22 @@ const Surprise = () => {
 
   return (
     <div className="container">
-      {goal && (
-        <p className={`goal-text ${animate ? "animate" : ""}`}>{goal}</p>
-      )}
-      <div className="half">
+      <div className="half left">
+        {goal && side === "left" && (
+          <p className={`goal-text black ${animate ? "animate" : ""}`}>
+            {goal}
+          </p>
+        )}
         <Button className="surprise-button" onClick={handleButtonClick}>
           Solo Daily Challenge. Do it!🦸‍♂️
         </Button>
       </div>
-      <div className="half">
+      <div className="half right">
+        {goal && side === "right" && (
+          <p className={`goal-text white ${animate ? "animate" : ""}`}>
+            {goal}
+          </p>
+        )}
         <Button className="surprise-button" onClick={handleSofiaButtonClick}>
           Sofia Group Daily Challenge! 🤝
         </Button>
