@@ -6,6 +6,7 @@ import { logoutUser } from "../../services/auth.service";
 import './Header.css';
 import { Avatar } from "@mui/material";
 
+
 export default function Header() {
     const { user, userData, setAppState } = useContext(AppContext);
     const [showProfile, setShowProfile] = useState(false);
