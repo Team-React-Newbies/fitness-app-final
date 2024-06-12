@@ -7,16 +7,21 @@ export const getUserByHandle = (handle) => {
   try {
     return get(ref(db, `users/${handle}`));
   } catch (error) {
-  return null;
-};
+    return null;
+  };
 }
-export const createUserHandle = (handle, uid, email, phone, photoUrl) => {
+
+export const createUserHandle = (handle, uid, email, phone, photoUrl, name, age, weight, height) => {
   return set(ref(db, `users/${handle}`), {
     handle,
     uid,
     email,
     phone,
     photoUrl,
+    name,
+    age,
+    weight,
+    height,
     createdOn: new Date().toISOString(),
     isAdmin: false,
     isBlocked: false
@@ -28,7 +33,6 @@ export const getUserData = (uid) => {
 };
 
 export const updateUserHandle = (handle, updates) => {
-  // Ensure email and handle cannot be updated
   const { email, handle: userHandle, ...allowedUpdates } = updates;
   return update(ref(db, `users/${handle}`), allowedUpdates);
 };

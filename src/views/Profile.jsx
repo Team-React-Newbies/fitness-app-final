@@ -3,6 +3,8 @@ import { AppContext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
 import { Container, Typography, Button, CircularProgress, Box, Avatar, Paper, Grid } from '@mui/material';
 import EditProfile from '../components/Profile/EditProfile';
+import swimBackground from '../assets/Backgrounds/swim.jpg';
+
 
 const Profile = () => {
   const { user, userData } = useContext(AppContext);

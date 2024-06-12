@@ -75,7 +75,7 @@ const AdminView = () => {
         <div className="admin-view">
             <input
                 type="text"
-                placeholder="Search by handle or email"
+                placeholder="Search by username or email"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="search-input"

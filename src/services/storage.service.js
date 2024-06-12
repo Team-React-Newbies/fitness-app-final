@@ -12,18 +12,6 @@ export const getMusicUrl = async (filePath) => {
   }
 };
 
-
-export const getPhotoUrl = async (filePath) => {
-  const storageRef = ref(storage, filePath);
-  try {
-    const url = await getDownloadURL(storageRef);
-    return url;
-  } catch (error) {
-    console.error('Error getting download URL:', error);
-    throw error;
-  }
-};
-
 export const uploadPhoto = async (file, uid) => {
   const storageRef = ref(storage, `photos/${uid}/${file.name}`);
   try {

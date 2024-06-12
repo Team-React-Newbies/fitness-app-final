@@ -5,7 +5,7 @@ import { useContext, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import { logoutUser } from "../../services/auth.service";
 import './Header.css';
-import { Avatar } from "@mui/material";
+import { Avatar, Tooltip } from "@mui/material";
 
 export default function Header() {
     const { user, userData, setAppState } = useContext(AppContext);
@@ -28,11 +28,16 @@ export default function Header() {
                                         className="header-avatar"
                                         src={userData.photoUrl}
                                         sx={{ width: 40, height: 40 }}
-                                        title={userData.name} // Add the title attribute here
+                                        title={userData.name || userData.handle} // Add the title attribute here
                                     />
                                 ) : null}
                             </NavLink>
+
+                            <Tooltip title="Must you leave us? 😢" arrow>
+                                <div>
                             <Button onClick={logout} className="button-logout">Log Out</Button>
+                                </div>
+                            </Tooltip>
                         </>
                     ) : (
                         <>
@@ -40,20 +45,26 @@ export default function Header() {
                             <NavLink to="/register" className="auth-link">Register</NavLink>
                         </>
                     )}
-                </div>
+                 </div>
                 <div className="top-nav">
                     <nav className="nav-container">
-                    <NavLink to="/" className="nav-link">Home</NavLink>
-
+                        <Tooltip title="Sends you to Home page" arrow>
+                            <NavLink to="/" className="nav-link">Home</NavLink>
+                        </Tooltip>
                         {user && userData && !userData.isBlocked && (
                             <>
-                                <NavLink to="/exercises" className="nav-link">My Exercises</NavLink>
-                                <NavLink to="/goals" className="nav-link">My Goals</NavLink>
+                                <Tooltip title="Here you can create, edit and delete your exercises!" arrow>
+                                    <NavLink to="/exercises" className="nav-link">My Exercises</NavLink>
+                                </Tooltip>
+                                <Tooltip title="Tailor your own way of powering thru!" arrow>
+                                    <NavLink to="/goals" className="nav-link">My Goals</NavLink>
+                                </Tooltip>
                             </>
                         )}
-
                         {userData && userData.isAdmin && (
-                            <NavLink to="/admin-dashboard" className="nav-link">Admin Dashboard</NavLink>
+                            <Tooltip title="The Beheader" arrow>
+                                <NavLink to="/admin-dashboard" className="nav-link">Admin Dashboard</NavLink>
+                            </Tooltip>
                         )}
                     </nav>
                 </div>

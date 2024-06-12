@@ -23,7 +23,7 @@ export default function Home() {
     const fetchAudioUrl = async () => {
       try {
         const url = await getMusicUrl(
-          "y2mate.com - MINO x ZICO  Okey Dokey Audio.mp3"
+          'y2mate.com - ZICO지코  TOUGH COOKIE 터프쿠키 AUDIO.mp3' 
         );
         setAudioUrl(url);
       } catch (error) {
