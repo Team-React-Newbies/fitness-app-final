@@ -55,7 +55,6 @@ function App() {
 
   return (
         <ThemeProvider theme={darkTheme}>
-        <ThemeProvider theme={darkTheme}>
     <BrowserRouter>
       <AppContext.Provider value={{ ...appState, setAppState }}>
         <div className="app-container">
@@ -80,7 +79,6 @@ function App() {
         </div>
       </AppContext.Provider>
     </BrowserRouter>
-        </ThemeProvider>
         </ThemeProvider>
   );
 }
