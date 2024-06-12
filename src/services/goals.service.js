@@ -3,9 +3,9 @@ import { db } from '../config/firebase-config.js';
 
 export const createGoal = (goalName, ownerHandle, goalIcon, from, to) => {
   const goalRef = ref(db, 'goals');
-  const newGoalRef = push(goalRef); // Generate a new unique key for each goal
+  const newGoalRef = push(goalRef); 
     return set(ref(db, `goals/${goalName}`), {
-    id: newGoalRef.key, // Use the generated key as the identifier
+    id: newGoalRef.key, 
     goalName,
     goalIcon,
     from,
