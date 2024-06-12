@@ -22,15 +22,16 @@ export default function Header() {
                 <div className="auth-links">
                     {user ? (
                         <>
-                            <NavLink to="/profile" id="username">
-                    {
-                        userData ? (
-                            <Avatar className="header-avatar" src={userData.photoUrl} sx={{ width:40, height: 40 }} />
-                        ) : (
-                             null
-                        )
-                    }
-                </NavLink>
+                             <NavLink to="/profile" id="username">
+                                {userData ? (
+                                    <Avatar
+                                        className="header-avatar"
+                                        src={userData.photoUrl}
+                                        sx={{ width: 40, height: 40 }}
+                                        title={userData.name} // Add the title attribute here
+                                    />
+                                ) : null}
+                            </NavLink>
                             <Button onClick={logout} className="button-logout">Log Out</Button>
                         </>
                     ) : (
