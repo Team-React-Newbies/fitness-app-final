@@ -16,49 +16,66 @@ export default function Header() {
     };
 
     return (
-        <div>
-            
-            <header className="header">
-                <div className="auth-links">
-                    {user ? (
-                        <>
-                            <NavLink to="/profile" id="username">
-                    {
-                        userData ? (
-                            <Avatar className="header-avatar" src={userData.photoUrl} sx={{ width:40, height: 40 }} />
-                        ) : (
-                             null
-                        )
-                    }
+      <div>
+        <header className="header">
+          <div className="auth-links">
+            {user ? (
+              <>
+                <NavLink to="/profile" id="username">
+                  {userData ? (
+                    <Avatar
+                      className="header-avatar"
+                      src={userData.photoUrl}
+                      sx={{ width: 40, height: 40 }}
+                    />
+                  ) : null}
                 </NavLink>
-                            <Button onClick={logout} className="button-logout">Log Out</Button>
-                        </>
-                    ) : (
-                        <>
-                            <NavLink to="/login" className="auth-link">Login</NavLink>
-                            <NavLink to="/register" className="auth-link">Register</NavLink>
-                        </>
-                    )}
-                </div>
-                <div className="top-nav">
-                    <nav className="nav-container">
-                    <NavLink to="/" className="nav-link">Home</NavLink>
-                        <NavLink to="/surprise-challenge" className="nav-link">Surprise Challenge</NavLink>
+                <Button onClick={logout} className="button-logout">
+                  Log Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <NavLink to="/login" className="auth-link">
+                  Login
+                </NavLink>
+                <NavLink to="/register" className="auth-link">
+                  Register
+                </NavLink>
+              </>
+            )}
+          </div>
+          <div className="top-nav">
+            <nav className="nav-container">
+              <NavLink to="/" className="nav-link">
+                Home
+              </NavLink>
 
-                        {user && userData && !userData.isBlocked && (
-                            <>
-                                <NavLink to="/exercise-videos" className="nav-link">Exercise Videos</NavLink>
-                                <NavLink to="/exercises" className="nav-link">My Exercises</NavLink>
-                                <NavLink to="/goals" className="nav-link">My Goals</NavLink>
-                            </>
-                        )}
+              {user && userData && !userData.isBlocked && (
+                <>
+                  <NavLink to="/surprise-challenge" className="nav-link">
+                    Surprise Challenge
+                  </NavLink>
+                  <NavLink to="/exercise-videos" className="nav-link">
+                    Exercise Videos
+                  </NavLink>
+                  <NavLink to="/exercises" className="nav-link">
+                    My Exercises
+                  </NavLink>
+                  <NavLink to="/goals" className="nav-link">
+                    My Goals
+                  </NavLink>
+                </>
+              )}
 
-                        {userData && userData.isAdmin && (
-                            <NavLink to="/admin-dashboard" className="nav-link">Admin Dashboard</NavLink>
-                        )}
-                    </nav>
-                </div>
-            </header>
-        </div>
+              {userData && userData.isAdmin && (
+                <NavLink to="/admin-dashboard" className="nav-link">
+                  Admin Dashboard
+                </NavLink>
+              )}
+            </nav>
+          </div>
+        </header>
+      </div>
     );
 }
