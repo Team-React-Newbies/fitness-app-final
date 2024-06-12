@@ -7,9 +7,10 @@ export const getUserByHandle = (handle) => {
   try {
     return get(ref(db, `users/${handle}`));
   } catch (error) {
-  return null;
-};
+    return null;
+  };
 }
+
 export const createUserHandle = (handle, uid, email, phone, photoUrl, name, age, weight, height) => {
   return set(ref(db, `users/${handle}`), {
     handle,
@@ -31,9 +32,9 @@ export const getUserData = (uid) => {
   return get(query(ref(db, 'users'), orderByChild('uid'), equalTo(uid)));
 };
 
-export const updateUserHandle = (uid, updates) => {
-  const { email, ...allowedUpdates } = updates;
-  return update(ref(db, `users/${uid}`), allowedUpdates);
+export const updateUserHandle = (handle, updates) => {
+  const { email, handle: userHandle, ...allowedUpdates } = updates;
+  return update(ref(db, `users/${handle}`), allowedUpdates);
 };
 
 export const checkAdminStatus = (uid) => {
@@ -91,8 +92,8 @@ export const updateUserPassword = async (newPassword) => {
   }
 };
 
-export const registerUser = async (email, password, handle, phone, photoUrl, age, height, weight) => {
+export const registerUser = async (email, password, handle, phone, photoUrl) => {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   const uid = userCredential.user.uid;
-  await createUserHandle(handle, uid, email, phone, photoUrl, age, height, weight);
+  await createUserHandle(handle, uid, email, phone, photoUrl);
 };

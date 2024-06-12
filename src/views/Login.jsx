@@ -72,51 +72,60 @@ export default function Login() {
           </Typography>
           {error && <Typography color="error">{error}</Typography>}
           <Box component="form" sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={form.email}
-              onChange={updateForm('email')}
-              InputProps={{
-                style: { color: 'black' },
-              }}
-              InputLabelProps={{
-                style: { color: 'grey' },
-              }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={form.password}
-              onChange={updateForm('password')}
-              InputProps={{
-                style: { color: 'black' },
-              }}
-              InputLabelProps={{
-                style: { color: 'grey' },
-              }}
-            />
-            <Button
-              type="button"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              onClick={login}
-            >
-              Login
-            </Button>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  value={form.email}
+                  onChange={updateForm('email')}
+                  InputProps={{
+                    style: { color: 'black' },
+                  }}
+                  InputLabelProps={{
+                    style: { color: 'grey' },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                  value={form.password}
+                  onChange={updateForm('password')}
+                  InputProps={{
+                    style: { color: 'black' },
+                  }}
+                  InputLabelProps={{
+                    style: { color: 'grey' },
+                  }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="button"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  onClick={login}
+                  disabled={loading}
+                >
+                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Login'}
+                </Button>
+              </Grid>
+            </Grid>
           </Box>
         </Box>
       </Paper>

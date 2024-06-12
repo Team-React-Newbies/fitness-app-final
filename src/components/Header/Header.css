@@ -37,7 +37,8 @@
   padding: 8px 12px;
   border-radius: 5px;
   font-size: 16px;
-  text-shadow: 0 0 8px #c1cdc1, 0 0 16px #c8d1c8;
+  text-shadow: 0 0 8px #333633, 0 0 16px #c8d1c8;
+  margin-bottom: 5px;
 }
 
 .nav-link:hover, .auth-link:hover, button:hover {
