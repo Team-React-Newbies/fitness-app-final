@@ -27,7 +27,6 @@ import { Search, Delete, Edit } from "@mui/icons-material";
 import strength from "../assets/ExerciseGoalsIcons/strength.svg";
 import flexibility from "../assets/ExerciseGoalsIcons/flexibility.svg";
 import cardio from "../assets/ExerciseGoalsIcons/cardio.svg";
-import "./Exercises.css"; 
 
 const icons = {
   strength: strength,
@@ -174,220 +173,218 @@ const ExerciseManager = () => {
   };
 
   return (
-    <div className="background-container">
-      <div className="content">
-        <Typography variant="h4" gutterBottom>
-          Exercise Manager
-        </Typography>
-        <TextField
-          label="Search Exercises"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          fullWidth
-          margin="normal"
-          InputProps={{
-            startAdornment: <Search />,
-          }}
-        />
-        <Button
-          variant="contained"
-          style={{ backgroundColor: "red", color: "white" }}
-          onClick={() => setOpen(true)}
-        >
-          Create Exercise
-        </Button>
-        <div style={{ marginTop: "20px" }}>
-          <Grid container spacing={2}>
-            {filteredExercises.map((exercise) => (
-              <Grid item key={exercise.title} xs={12} sm={6} md={4}>
-                <Card>
-                  <CardContent>
-                    {exercise.icon && (
-                      <img
-                        src={icons[exercise.icon]}
-                        alt={exercise.icon}
-                        style={{
-                          width: "100px",
-                          height: "100px",
-                          display: "block",
-                          margin: "0 auto",
-                        }}
-                      />
-                    )}
-                    <Typography variant="h5" component="h2" align="center">
-                      {exercise.title}
-                    </Typography>
-                    <Typography color="textSecondary" align="center">
-                      {exercise.detailType}: {exercise.detailValue}
-                    </Typography>
-                    <div style={{ textAlign: "center" }}>
-                      <IconButton onClick={() => handleEdit(exercise)}>
-                        <Edit />
-                      </IconButton>
-                      <IconButton onClick={() => handleDelete(exercise.title)}>
-                        <Delete />
-                      </IconButton>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </div>
-        <Dialog
-          open={open}
-          onClose={() => {
-            setOpen(false);
-            setCurrentExercise(null);
-          }}
-        >
-          <DialogTitle>
-            {currentExercise ? "Edit Exercise" : "Create a new exercise"}
-          </DialogTitle>
-          <DialogContent>
-            {error && <Typography color="error">{error}</Typography>}
-            <TextField
-              autoFocus
-              margin="dense"
-              name="title"
-              label="Exercise Title"
-              fullWidth
-              value={newExercise.title}
-              onChange={handleInputChange}
-              required
-            />
-            <FormControl fullWidth margin="dense">
-              <Typography component="legend">Detail Type</Typography>
-              <RadioGroup
-                name="detailType"
-                value={newExercise.detailType}
-                onChange={handleDetailTypeChange}
-                row
-              >
-                <FormControlLabel
-                  value="StepsPerDay"
-                  control={<Radio />}
-                  label="Steps per Day"
-                />
-                <FormControlLabel
-                  value="MinutesPerDay"
-                  control={<Radio />}
-                  label="Minutes per Day"
-                />
-                <FormControlLabel
-                  value="KmPerDay"
-                  control={<Radio />}
-                  label="Km per Day"
-                />
-                <FormControlLabel
-                  value="RepsPerDay"
-                  control={<Radio />}
-                  label="Reps per Day"
-                />
-              </RadioGroup>
-            </FormControl>
-            <TextField
-              margin="dense"
-              name="detailValue"
-              label="Detail Value"
-              fullWidth
-              value={newExercise.detailValue}
-              onChange={handleInputChange}
-              required
-            />
-            <FormControl component="fieldset" margin="dense">
-              <Typography component="legend">Select Icon</Typography>
-              <RadioGroup
-                name="icon"
-                value={newExercise.icon}
-                onChange={handleIconChange}
-                row
-              >
-                <FormControlLabel
-                  value="strength"
-                  control={
-                    <Radio
-                      icon={
-                        <img
-                          src={strength}
-                          alt="strength"
-                          style={{ width: "50px", height: "50px" }}
-                        />
-                      }
-                      checkedIcon={
-                        <img
-                          src={strength}
-                          alt="strength"
-                          style={{ width: "50px", height: "50px" }}
-                        />
-                      }
+    <div>
+      <Typography variant="h4" gutterBottom>
+        Exercise Manager
+      </Typography>
+      <TextField
+        label="Search Exercises"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        fullWidth
+        margin="normal"
+        InputProps={{
+          startAdornment: <Search />,
+        }}
+      />
+      <Button
+        variant="contained"
+        style={{ backgroundColor: "red", color: "white" }}
+        onClick={() => setOpen(true)}
+      >
+        Create Exercise
+      </Button>
+      <div style={{ marginTop: "20px" }}>
+        <Grid container spacing={2}>
+          {filteredExercises.map((exercise) => (
+            <Grid item key={exercise.title} xs={12} sm={6} md={4}>
+              <Card>
+                <CardContent>
+                  {exercise.icon && (
+                    <img
+                      src={icons[exercise.icon]}
+                      alt={exercise.icon}
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        display: "block",
+                        margin: "0 auto",
+                      }}
                     />
-                  }
-                  label="Strength"
-                />
-                <FormControlLabel
-                  value="cardio"
-                  control={
-                    <Radio
-                      icon={
-                        <img
-                          src={cardio}
-                          alt="cardio"
-                          style={{ width: "50px", height: "50px" }}
-                        />
-                      }
-                      checkedIcon={
-                        <img
-                          src={cardio}
-                          alt="cardio"
-                          style={{ width: "50px", height: "50px" }}
-                        />
-                      }
-                    />
-                  }
-                  label="Cardio"
-                />
-                <FormControlLabel
-                  value="flexibility"
-                  control={
-                    <Radio
-                      icon={
-                        <img
-                          src={flexibility}
-                          alt="flexibility"
-                          style={{ width: "50px", height: "50px" }}
-                        />
-                      }
-                      checkedIcon={
-                        <img
-                          src={flexibility}
-                          alt="flexibility"
-                          style={{ width: "50px", height: "50px" }}
-                        />
-                      }
-                    />
-                  }
-                  label="Flexibility"
-                />
-              </RadioGroup>
-            </FormControl>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => {
-                setOpen(false);
-                setCurrentExercise(null);
-              }}
-              color="primary"
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleSubmit} color="primary">
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
+                  )}
+                  <Typography variant="h5" component="h2" align="center">
+                    {exercise.title}
+                  </Typography>
+                  <Typography color="textSecondary" align="center">
+                    {exercise.detailType}: {exercise.detailValue}
+                  </Typography>
+                  <div style={{ textAlign: "center" }}>
+                    <IconButton onClick={() => handleEdit(exercise)}>
+                      <Edit />
+                    </IconButton>
+                    <IconButton onClick={() => handleDelete(exercise.title)}>
+                      <Delete />
+                    </IconButton>
+                  </div>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
       </div>
+      <Dialog
+        open={open}
+        onClose={() => {
+          setOpen(false);
+          setCurrentExercise(null);
+        }}
+      >
+        <DialogTitle>
+          {currentExercise ? "Edit Exercise" : "Create a new exercise"}
+        </DialogTitle>
+        <DialogContent>
+          {error && <Typography color="error">{error}</Typography>}
+          <TextField
+            autoFocus
+            margin="dense"
+            name="title"
+            label="Exercise Title"
+            fullWidth
+            value={newExercise.title}
+            onChange={handleInputChange}
+            required
+          />
+          <FormControl component="fieldset" margin="dense">
+            <Typography component="legend">Detail Type</Typography>
+            <RadioGroup
+              name="detailType"
+              value={newExercise.detailType}
+              onChange={handleDetailTypeChange}
+              row
+            >
+              <FormControlLabel
+                value="StepsPerDay"
+                control={<Radio />}
+                label="Steps per Day"
+              />
+              <FormControlLabel
+                value="MinutesPerDay"
+                control={<Radio />}
+                label="Minutes per Day"
+              />
+              <FormControlLabel
+                value="KmPerDay"
+                control={<Radio />}
+                label="Km per Day"
+              />
+              <FormControlLabel
+                value="RepsPerDay"
+                control={<Radio />}
+                label="Reps per Day"
+              />
+            </RadioGroup>
+          </FormControl>
+          <TextField
+            margin="dense"
+            name="detailValue"
+            label="Detail Value"
+            fullWidth
+            value={newExercise.detailValue}
+            onChange={handleInputChange}
+            required
+          />
+          <FormControl component="fieldset" margin="dense">
+            <Typography component="legend">Select Icon</Typography>
+            <RadioGroup
+              name="icon"
+              value={newExercise.icon}
+              onChange={handleIconChange}
+              row
+            >
+              <FormControlLabel
+                value="strength"
+                control={
+                  <Radio
+                    icon={
+                      <img
+                        src={strength}
+                        alt="strength"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    }
+                    checkedIcon={
+                      <img
+                        src={strength}
+                        alt="strength"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    }
+                  />
+                }
+                label="Strength"
+              />
+              <FormControlLabel
+                value="cardio"
+                control={
+                  <Radio
+                    icon={
+                      <img
+                        src={cardio}
+                        alt="cardio"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    }
+                    checkedIcon={
+                      <img
+                        src={cardio}
+                        alt="cardio"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    }
+                  />
+                }
+                label="Cardio"
+              />
+              <FormControlLabel
+                value="flexibility"
+                control={
+                  <Radio
+                    icon={
+                      <img
+                        src={flexibility}
+                        alt="flexibility"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    }
+                    checkedIcon={
+                      <img
+                        src={flexibility}
+                        alt="flexibility"
+                        style={{ width: "50px", height: "50px" }}
+                      />
+                    }
+                  />
+                }
+                label="Flexibility"
+              />
+            </RadioGroup>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setOpen(false);
+              setCurrentExercise(null);
+            }}
+            color="primary"
+          >
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
