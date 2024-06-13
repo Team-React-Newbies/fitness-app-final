@@ -43,9 +43,8 @@ export default function Home() {
       </video>
       <div className="home-container">
         <div className="overlay">
-          <h1 className="title">Team QuickFingers</h1>
           <div className="content">
-            <h2>PowersnApp</h2>
+            <h1>PowersnApp</h1>
             <p>In Construction...</p>
           </div>
           <div className="user-count">
