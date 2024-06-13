@@ -1,16 +1,17 @@
 import { ref, set, get, update, remove, push } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 
-export const createGoal = (goalName, ownerHandle, from, to) => {
+export const createGoal = (goalName, ownerHandle, goalIcon, from, to) => {
   const goalRef = ref(db, 'goals');
-  const newGoalRef = push(goalRef); // Генерира нов уникален ключ за всяка цел
-  return set(ref(db, `goals/${goalName}`), {
+  const newGoalRef = push(goalRef); 
+    return set(ref(db, `goals/${goalName}`), {
+    id: newGoalRef.key, 
     goalName,
-    gid: newGoalRef.key, // Използване на генерирания ключ като идентификатор
-    owner: ownerHandle,
-    createdOn: new Date().toISOString(),
+    goalIcon,
     from,
-    to
+    to,
+    owner: ownerHandle,
+    createdOn: new Date().toISOString()
   });
 };
 

@@ -1,14 +1,15 @@
 import { ref, set, get, update, remove, push } from 'firebase/database';
 import { db } from '../config/firebase-config.js';
 
-export const createExercise = (title, ownerHandle, duration, steps) => {
+export const createExercise = (title, ownerHandle, detailValue, detailType, icon) => {
   const exerciseRef = ref(db, 'exercises');
   const newExerciseRef = push(exerciseRef); // Генерира нов уникален ключ за всяко упражнение
   return set(ref(db, `exercises/${title}`), {
     id: newExerciseRef.key, // Използване на генерирания ключ като идентификатор
     title,
-    duration,
-    steps,
+    detailType,
+    detailValue,
+    icon,
     owner: ownerHandle,
     createdOn: new Date().toISOString()
   });

@@ -3,7 +3,6 @@ import './App.css';
 import Home from './views/Home.jsx';
 import Footer from './components/Footer.jsx';
 import Header from './components/Header/Header.jsx';
-import AllPosts from './views/AllPosts.jsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import NotFound from './views/NotFound.jsx';
 import Login from './views/Login.jsx';
@@ -18,8 +17,10 @@ import Exercises from './views/Exercises.jsx';
 import Goals from './views/Goals.jsx';
 import Profile from './views/Profile.jsx';
 import EditProfile from './components/Profile/EditProfile.jsx';
+import ExerciseVideos from './views/ExerciseVideos.jsx';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import Surprise from './views/SurpriseChallengeView/SurpriseChallengeView.jsx';
 
 const darkTheme = createTheme({
   palette: {
@@ -66,7 +67,8 @@ function App() {
               <Route path="/profile" element={<Authenticated><Profile /></Authenticated>} />
               <Route path="/edit-profile" element={<Authenticated><EditProfile /></Authenticated>} />
               <Route path="/admin-dashboard" element={<Authenticated><AdminView /></Authenticated>} />
-              <Route path="/posts" element={<Authenticated><AllPosts /></Authenticated>} />
+              <Route path="/surprise-challenge" element={<Authenticated><Surprise /></Authenticated>} />
+              <Route path="/exercise-videos" element={<Authenticated><ExerciseVideos/></Authenticated>} />
               <Route path="/exercises" element={<Authenticated><Exercises /></Authenticated>} />
               <Route path="/goals" element={<Authenticated><Goals /></Authenticated>} />
   

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { fetchAllUsers, toggleUserBlockStatus, makeAdmin } from '../services/users.service.js'; // Ensure the path to services is correct
+import { fetchAllUsers, toggleUserBlockStatus, makeAdmin } from '../services/users.service.js';
 import { AppContext } from '../context/AppContext.jsx';
-import './AdminView.css'; // Make sure to create and import this CSS file
+import './AdminView.css';
 
 const AdminView = () => {
     const [users, setUsers] = useState({});
@@ -12,7 +12,6 @@ const AdminView = () => {
         const loadUsers = async () => {
             try {
                 const usersData = await fetchAllUsers();
-                console.log('Fetched Users:', usersData);
                 setUsers(usersData);
             } catch (error) {
                 console.error('Failed to fetch users:', error);
@@ -76,32 +75,29 @@ const AdminView = () => {
         <div className="admin-view">
             <input
                 type="text"
-                placeholder="Search by handle or email"
+                placeholder="Search by username or email"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="search-input"
             />
             <ul className="user-list">
-                {filteredUsers.map(user => {
-                    console.log(`Rendering user: ${user.handle}, isAdmin: ${user.isAdmin}`);
-                    return (
-                        <li key={user.uid} className="user-item">
-                            <div className="user-info">
-                                {user.handle} - {user.email}
-                            </div>
-                            <div className="user-actions">
-                                <button onClick={() => handleToggleBlock(user.handle, user.isBlocked)}>
-                                    {user.isBlocked ? 'Unblock' : 'Block'}
+                {filteredUsers.map(user => (
+                    <li key={user.uid} className="user-item">
+                        <div className="user-info">
+                            {user.handle} - {user.email}
+                        </div>
+                        <div className="user-actions">
+                            <button onClick={() => handleToggleBlock(user.handle, user.isBlocked)}>
+                                {user.isBlocked ? 'Unblock' : 'Block'}
+                            </button>
+                            {!user.isAdmin && (
+                                <button onClick={() => handleMakeAdmin(user.handle)}>
+                                    Make Admin
                                 </button>
-                                {!user.isAdmin && (
-                                    <button onClick={() => handleMakeAdmin(user.handle)}>
-                                        Make Admin
-                                    </button>
-                                )}
-                            </div>
-                        </li>
-                    );
-                })}
+                            )}
+                        </div>
+                    </li>
+                ))}
             </ul>
         </div>
     );
