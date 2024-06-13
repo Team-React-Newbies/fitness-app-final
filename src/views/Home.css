@@ -2,6 +2,7 @@
     position: relative;
     background-size: cover;
     background-position: center;
+    padding-top: 5vw;
     height: 200vh;
     color: rgb(223, 132, 132);
     text-align: center;
@@ -64,12 +65,19 @@
     margin-right: auto;
 }
 
+@keyframes peak {
+    from {margin-top: 23vw;}
+    to {margin-top: 10vw;}
+}
+
 .idol-quotes {
-    margin-top: 22vw;
     background-color: rgba(0, 0, 0, 0.5);
     padding: 10px;
     border-radius: 10px;
     display: block;
+    animation-name: peak;
+    animation-duration: 2s;
+    margin-top: 10vw;
 }
 
 .idol-quotes p{
