@@ -23,7 +23,7 @@ export default function Home() {
     const fetchAudioUrl = async () => {
       try {
         const url = await getMusicUrl(
-          "y2mate.com - MINO x ZICO  Okey Dokey Audio.mp3"
+          "y2mate.com - ZICO지코  TOUGH COOKIE 터프쿠키 AUDIO.mp3"
         );
         setAudioUrl(url);
       } catch (error) {
@@ -60,13 +60,23 @@ export default function Home() {
         <div className="overlay">
           <h1 className="title">Team QuickFingers</h1>
           <div className="content">
-            <h2>Awesome Fitness App</h2>
+            <h2>PowersnApp</h2>
             <p>In Construction...</p>
           </div>
           <div className="user-count">
             <p>Number of users of the app: {userCount}</p>
           </div>
         </div>
+          <div className="idol-quotes">
+            <p>They all started from scratch:</p>
+
+            <img className="quote" src={"/src/assets/QuotePhotos/kobeBryantQuote.jpg"} alt="Kobe Bryant qoute" />
+            <img className="quote" src={"/src/assets/QuotePhotos/muhammedAliQuote.jpg"} alt="Muhammed Ali quote" />
+            <img className="quote" src={"/src/assets/QuotePhotos/usainBoltQuote.jpg"} alt="Usain bolt quote" />
+            <img className="quote" src={"/src/assets/QuotePhotos/michaelJordanQuote.jpg"} alt="Michael Jordan quote" />
+            <img className="quote" src={"/src/assets/QuotePhotos/vinceLombardiQuote.jpg"} alt="Vince Lombardi quote" />
+            <img className="quote" src={"/src/assets/QuotePhotos/cristianoRonaldoQuote.png"} alt="Cristiano Ronaldo quote" />
+          </div>
         {audioUrl && (
           <audio ref={audioRef} controls autoPlay className="audio-player">
             <source src={audioUrl} type="audio/mp3" />
